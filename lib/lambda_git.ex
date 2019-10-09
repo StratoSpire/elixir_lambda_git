@@ -9,7 +9,7 @@ defmodule LambdaGit do
   ## Examples
 
     iex> LambdaGit.init()
-    {:ok, %{template_dir: "/tmp/git/usr/share/git-core/template", exec_path: "/tmp/git/usr/libexec/git-core", ld_library_path: "/tmp/git/usr/lib64", bin_path: "/tmp/git/usr/bin"}}
+    {:ok, %{template_dir: "/tmp/git/usr/share/git-core/templates", exec_path: "/tmp/git/usr/libexec/git-core", ld_library_path: "/tmp/git/usr/lib64", bin_path: "/tmp/git/usr/bin"}}
 
   """
   def init do
@@ -50,7 +50,7 @@ defmodule LambdaGit do
   def template_dir, do: base_dir() |> Path.join("usr/share/git-core/templates")
   def exec_path, do: base_dir() |> Path.join("usr/libexec/git-core")
   def bin_path, do: base_dir() |> Path.join("usr/bin")
-  def path, do: System.get_env("PATH") <>":" <> bin_path()
+  def path, do: bin_path() |> build_path_var("PATH")
 
   def ld_library_path do
     base_dir()

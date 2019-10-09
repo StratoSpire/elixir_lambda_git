@@ -3,7 +3,7 @@ defmodule LambdaGitTest do
   doctest LambdaGit
 
   test "intializes git" do
-   template_dir = "/tmp/git/usr/share/git-core/template"
+   template_dir = "/tmp/git/usr/share/git-core/templates"
    exec_path = "/tmp/git/usr/libexec/git-core"
    ld_library_path = "/tmp/git/usr/lib64"
    bin_path = "/tmp/git/usr/bin"
