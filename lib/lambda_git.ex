@@ -41,7 +41,7 @@ defmodule LambdaGit do
     with :ok <- System.put_env("GIT_TEMPLATE_DIR", template_dir()),
          :ok <- System.put_env("GIT_EXEC_PATH", exec_path()),
          :ok <- System.put_env("LD_LIBRARY_PATH", ld_library_path()),
-         :ok <- System.put_env("PATH", System.get_env("PATH") <>":" <> bin_path()) do
+         :ok <- System.put_env("PATH", path()) do
       :ok
     end
   end
@@ -49,6 +49,24 @@ defmodule LambdaGit do
   def base_dir, do: "/tmp/git"
   def template_dir, do: base_dir() |> Path.join("usr/share/git-core/template")
   def exec_path, do: base_dir() |> Path.join("usr/libexec/git-core")
-  def ld_library_path, do: base_dir() |> Path.join("usr/lib64")
   def bin_path, do: base_dir() |> Path.join("usr/bin")
+  def path, do: System.get_env("PATH") <>":" <> bin_path()
+
+  def ld_library_path do
+    base_dir()
+    |> Path.join("usr/lib64")
+    |> build_path_var("LD_LIBRARY_PATH")
+  end
+
+  defp build_path_var(path, var) do
+    current = System.get_env(var)
+    cond do
+      current == nil ->
+        path
+      current |> String.contains?(path) ->
+        current
+      true ->
+        current <> ":" <> path
+    end
+  end
 end
