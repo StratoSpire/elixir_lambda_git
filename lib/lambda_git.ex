@@ -47,7 +47,7 @@ defmodule LambdaGit do
   end
 
   def base_dir, do: "/tmp/git"
-  def template_dir, do: base_dir() |> Path.join("usr/share/git-core/template")
+  def template_dir, do: base_dir() |> Path.join("usr/share/git-core/templates")
   def exec_path, do: base_dir() |> Path.join("usr/libexec/git-core")
   def bin_path, do: base_dir() |> Path.join("usr/bin")
   def path, do: System.get_env("PATH") <>":" <> bin_path()
