@@ -14,7 +14,7 @@ defmodule LambdaGit do
   """
   def init do
     if Application.get_env(:lambda_git, :enabled) do
-      with :ok = extract(),
+      with {:ok, _} = extract(),
            :ok <- put_envs() do
         {
           :ok,
@@ -26,15 +26,25 @@ defmodule LambdaGit do
           }
         }
       end
+      |> case do
+           {:ok, result} ->
+             {:ok, result}
+
+           other ->
+             {:error, other}
+         end
     else
       {:ok, nil}
     end
   end
 
   def extract do
-    :code.priv_dir(:lambda_git)
-    |> Path.join("git-2.4.3.tar")
-    |> :erl_tar.extract([{:cwd, base_dir()}])
+    tar = :code.priv_dir(:lambda_git) |> Path.join("git-2.4.3.tar")
+    File.mkdir_p(base_dir())
+    case System.cmd("tar", ["-xzf", tar, "-C", base_dir()]) do
+      {out, 0} -> {:ok, out}
+      {err, 1} -> {:error, err}
+    end
   end
 
   def put_envs do
