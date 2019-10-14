@@ -41,7 +41,7 @@ defmodule LambdaGit do
   def extract do
     tar = Path.join([Application.app_dir(:lambda_git), "priv/git-2.4.3.tar"])
     File.mkdir_p(base_dir())
-    case System.cmd("tar", ["-xzf", tar, "-C", base_dir()]) do
+    case System.cmd("tar", ["-xf", tar, "-C", base_dir()]) do
       {out, 0} -> {:ok, out}
       {err, 1} -> {:error, err}
     end
